@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="ar">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Noor Nady Sabr — ID</title>
+  <style>
+    :root{
+      --bg-1: 28,16,36;          /* dark purple-ish */
+      --bg-2: 255,255,255;      /* white */
+      --accent: 186, 85, 255;   /* purple accent */
+      --text-dark: 20,20,20;
+      --text-light: 245,245,245;
+      --glass: rgba(255,255,255,0.06);
+      --glass-2: rgba(0,0,0,0.35);
+      --blur-radius: 14px;
+      --card-radius: 18px;
+      --transition: 300ms cubic-bezier(.2,.9,.3,1);
+    }
+
+    /* Dark/Light theme vars */
+    :root[data-theme="light"]{
+      --glass: rgba(255,255,255,0.7);
+      --glass-2: rgba(0,0,0,0.06);
+      --text-color: rgb(var(--text-dark));
+      --muted: rgba(0,0,0,0.6);
+    }
+    :root[data-theme="dark"]{
+      --glass: rgba(0,0,0,0.45);
+      --glass-2: rgba(255,255,255,0.03);
+      --text-color: rgb(var(--text-light));
+      --muted: rgba(255,255,255,0.65);
+    }
+
+    /* reset + base */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: "Segoe UI", Roboto, "Noto Sans Arabic", system-ui, sans-serif;
+      color:var(--text-color);
+      background: #111;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      transition: background var(--transition);
+    }
+
+    /* Background layer: blurred version of profile image + gradient */
+    .bg{
+      position:fixed;
+      inset:0;
+      z-index:-3;
+      overflow:hidden;
+      pointer-events:none;
+    }
+    .bg::before{
+      content:"";
+      position:absolute;
+      inset:-10%;
+      background-image: url("profile.jpg");
+      background-size:cover;
+      background-position:center;
+      transform: scale(1.08);
+      filter: blur(var(--blur-radius)) brightness(0.65) contrast(1.05);
+      transition: filter var(--transition);
+    }
+    /* colored gradient overlay */
+    .bg::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: linear-gradient(135deg, rgba(75,0,130,0.35), rgba(0,0,0,0.5) 45%, rgba(255,255,255,0.02));
+      mix-blend-mode:overlay;
+    }
+
+    /* main card */
+    .card{
+      width:100%;
+      max-width:420px;
+      background: linear-gradient(180deg, rgba(var(--bg-2)/1,0.04), rgba(0,0,0,0.25));
+      border-radius: calc(var(--card-radius) + 4px);
+      padding:28px 20px;
+      display:flex;
+      align-items:center;
+      flex-direction:column;
+      gap:16px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.45);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,0.04);
+      position:relative;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .card:active{ transform: translateY(2px) }
+
+    /* theme toggle */
+    .theme-toggle{
+      position:absolute;
+      right:12px;
+      top:12px;
+      background:var(--glass);
+      border-radius:10px;
+      padding:8px;
+      display:inline-grid;
+      place-items:center;
+      cursor:pointer;
+      border:1px solid rgba(255,255,255,0.06);
+      transition: transform 180ms ease, background var(--transition);
+    }
+    .theme-toggle:active{ transform: scale(.96) }
+
+    /* Profile image circle */
+    .avatar-wrap{
+      width:140px;
+      height:140px;
+      border-radius:50%;
+      padding:6px;
+      display:grid;
+      place-items:center;
+      background: linear-gradient(135deg, rgba(var(--accent),0.12), rgba(255,255,255,0.03));
+      box-shadow: 0 8px 22px rgba(0,0,0,0.5);
+    }
+    .avatar{
+      width:100%;
+      height:100%;
+      border-radius:50%;
+      overflow:hidden;
+      display:block;
+      border:4px solid rgba(255,255,255,0.06);
+    }
+    .avatar img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    /* name & info */
+    h1{
+      margin:0;
+      font-size:1.35rem;
+      letter-spacing:0.6px;
+      font-weight:800;
+      text-align:center;
+    }
+    .sub{
+      margin:0;
+      font-size:.95rem;
+      font-weight:600;
+      opacity:.9;
+      color:var(--muted);
+      text-align:center;
+    }
+    .muted{
+      font-size:.95rem;
+      color:var(--muted);
+      text-align:center;
+      margin-top:-2px;
+    }
+
+    /* links list */
+    .links{
+      width:100%;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top:6px;
+      align-items:stretch;
+    }
+    .link{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:12px 14px;
+      border-radius:12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
+      border:1px solid rgba(255,255,255,0.03);
+      cursor:pointer;
+      text-decoration:none;
+      color:inherit;
+      transition: transform 160ms ease, box-shadow var(--transition);
+      transform-origin:center;
+      will-change: transform, opacity;
+      opacity:0;
+      transform: translateY(18px) scale(.995);
+    }
+    .link:active{ transform: scale(.99) }
+    .link .ico{
+      width:40px;
+      height:40px;
+      display:grid;
+      place-items:center;
+      border-radius:10px;
+      background:linear-gradient(180deg, rgba(var(--accent),0.09), rgba(0,0,0,0.06));
+      flex-shrink:0;
+      border:1px solid rgba(255,255,255,0.03);
+    }
+    .link .text{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      line-height:1;
+    }
+    .link .text .title{ font-weight:700 }
+    .link .text .desc{ font-size:.85rem; color:var(--muted); margin-top:3px }
+
+    /* reveal class added by JS */
+    .reveal{
+      opacity:1 !important;
+      transform: translateY(0) scale(1) !important;
+      transition: opacity 450ms cubic-bezier(.2,.9,.3,1), transform 450ms cubic-bezier(.2,.9,.3,1);
+    }
+
+    /* center everything in viewport width */
+    .wrap{
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    /* small footer hint */
+    .hint{
+      margin-top:10px;
+      font-size:.8rem;
+      color:var(--muted);
+      text-align:center;
+    }
+
+    /* responsive */
+    @media (max-width:420px){
+      .avatar-wrap{ width:120px; height:120px }
+      .card{ padding:20px 16px }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg" aria-hidden="true"></div>
+
+  <main class="wrap">
+    <section class="card" role="region" aria-label="بطاقة تعريف نور نادي صابر">
+      <button class="theme-toggle" id="themeToggle" aria-label="تبديل وضع الليل والنهار" title="تبديل الوضع">
+        <!-- simple sun/moon icon using SVG -->
+        <svg id="themeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" fill="currentColor"></path>
+        </svg>
+      </button>
+
+      <div class="avatar-wrap" aria-hidden="true">
+        <figure class="avatar" role="img" aria-label="صورة نور">
+          <img src="profile.jpg" alt="صورة نور نادي صابر">
+        </figure>
+      </div>
+
+      <h1>Noor Nady Sabr</h1>
+      <p class="sub">تربية عام — جامعة المنيا</p>
+
+      <div class="links" id="links">
+        <!-- Phone -->
+        <a class="link" href="tel:01146979833" aria-label="اتصل 01146979833" target="_self">
+          <div class="ico" aria-hidden="true">
+            <!-- phone SVG -->
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.63A2 2 0 014.07 2h3a2 2 0 012 1.72c.12 1.05.43 2.08.91 3.03a2 2 0 01-.45 2.11L9.91 10.09a16 16 0 006 6l1.23-1.23a2 2 0 012.11-.45c.95.48 1.98.79 3.03.91A2 2 0 0122 16.92z" fill="currentColor"/></svg>
+          </div>
+          <div class="text"><span class="title">01146979833</span><span class="desc">اتصل مباشرة</span></div>
+        </a>
+
+        <!-- WhatsApp -->
+        <a class="link" href="https://wa.me/201146979833" aria-label="WhatsApp Noor" target="_blank" rel="noopener">
+          <div class="ico" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20.52 3.48A11.81 11.81 0 0012 0C5.37 0 .08 5.29.08 11.92a11.6 11.6 0 001.6 5.88L0 24l6.42-1.63a11.82 11.82 0 005.58 1.43c6.63 0 11.92-5.29 11.92-11.92 0-3.17-1.24-6.14-3.4-8.4zM12 21.6a9.03 9.03 0 01-4.66-1.28l-.33-.2-3.79.96.96-3.7-.21-.37A9.03 9.03 0 1121.03 12 9 9 0 0112 21.6z" fill="currentColor"/></svg>
+          </div>
+          <div class="text"><span class="title">WhatsApp</span><span class="desc">01146979833</span></div>
+        </a>
+
+        <!-- Telegram (opens web or app) -->
+        <a class="link" href="https://t.me/+201146979833" aria-label="Telegram Noor" target="_blank" rel="noopener">
+          <div class="ico" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M22 2L2 10.5 8.5 13 11 21l2.5-7.5L22 2z" fill="currentColor"/></svg>
+          </div>
+          <div class="text"><span class="title">Telegram</span><span class="desc">01146979833</span></div>
+        </a>
+
+        <!-- Facebook -->
+        <a class="link" href="https://www.facebook.com/share/177TTidb6S/" aria-label="فيسبوك Noor" target="_blank" rel="noopener">
+          <div class="ico" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M22 12a10 10 0 10-11.5 9.9v-7H8v-3h2.5V9.5c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.3c-1.3 0-1.7.8-1.7 1.6V12H20l-1 3h-3.2v7A10 10 0 0022 12z" fill="currentColor"/></svg>
+          </div>
+          <div class="text"><span class="title">Facebook</span><span class="desc">مشاركة الصفحة</span></div>
+        </a>
+
+        <!-- Instagram -->
+        <a class="link" href="https://www.instagram.com/noornady___cr7?igsh=MWdxdnY5MWFqeXZ6cg==" aria-label="Instagram Noor" target="_blank" rel="noopener">
+          <div class="ico" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M7 2h10a5 5 0 015 5v10a5 5 0 01-5 5H7a5 5 0 01-5-5V7a5 5 0 015-5zm5 6.2A4.8 4.8 0 1016.8 13 4.8 4.8 0 0012 8.2zm5.2-1.6a1.12 1.12 0 11-1.12-1.12A1.12 1.12 0 0117.2 6.6z" fill="currentColor"/></svg>
+          </div>
+          <div class="text"><span class="title">Instagram</span><span class="desc">@noornady___cr7</span></div>
+        </a>
+
+        <!-- TikTok -->
+        <a class="link" href="https://www.tiktok.com/@noor___cr7?_t=ZS-8zzMDD3yMuw&_r=1" aria-label="TikTok Noor" target="_blank" rel="noopener">
+          <div class="ico" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 3v9.55A4.45 4.45 0 1014.45 17V7h3.11A7 7 0 1110 3z" fill="currentColor"/></svg>
+          </div>
+          <div class="text"><span class="title">TikTok</span><span class="desc">@noor___cr7</span></div>
+        </a>
+      </div>
+
+      <p class="hint">اسحب لأعلى أو نزّل لتظهر المزيد — الأيقونات تظهر تدريجيًا</p>
+    </section>
+  </main>
+
+  <script>
+    // --- Theme: remember preference in localStorage ---
+    const root = document.documentElement;
+    const stored = localStorage.getItem('theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme:light)').matches ? 'light' : 'dark');
+    function applyTheme(t){
+      root.setAttribute('data-theme', t);
+      localStorage.setItem('theme', t);
+      // swap icon
+      const icon = document.getElementById('themeIcon');
+      if(t === 'light'){
+        icon.innerHTML = '<path d=\"M6.76 4.84l-1.8-1.79L3.17 4.84l1.79 1.79 1.8-1.79zM1 13h3v-2H1v2zm10 9h2v-3h-2v3zm7.03-17.66l-1.79 1.79 1.79 1.79 1.79-1.79-1.79-1.79zM17.24 19.16l1.79 1.79 1.79-1.79-1.79-1.79-1.79 1.79zM21 11v2h3v-2h-3zM4.22 19.78l1.79-1.79-1.79-1.79-1.79 1.79 1.79 1.79zM12 6a6 6 0 100 12 6 6 0 000-12z\" fill=\"currentColor\">';
+      } else {
+        icon.innerHTML = '<path d=\"M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z\" fill=\"currentColor\">';
+      }
+    }
+    applyTheme(stored);
+
+    document.getElementById('themeToggle').addEventListener('click', ()=>{
+      const current = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      applyTheme(current);
+    });
+
+    // --- reveal on scroll using IntersectionObserver ---
+    const observer = new IntersectionObserver((entries)=>{
+      entries.forEach(ent=>{
+        if(ent.isIntersecting){
+          ent.target.classList.add('reveal');
+        }
+      });
+    }, {threshold:0.15});
+
+    // Observe each link with slight stagger
+    const links = document.querySelectorAll('.link');
+    links.forEach((lnk, i)=>{
+      // set a small delay that will be used by CSS transition via inline style
+      lnk.style.transitionDelay = (i * 80) + 'ms';
+      observer.observe(lnk);
+    });
+
+    // Also reveal avatar and headings
+    document.querySelectorAll('.avatar-wrap, h1, .sub').forEach((el, idx)=>{
+      el.style.opacity = 0;
+      el.style.transform = 'translateY(12px)';
+      el.style.transition = 'opacity 420ms ease '+(idx*60)+'ms, transform 420ms ease '+(idx*60)+'ms';
+      setTimeout(()=>{ el.style.opacity = 1; el.style.transform = 'translateY(0)'; }, 100);
+    });
+
+    // Accessibility: make phone open native dialer on mobile; already done via tel:
+    // Small enhancement: clicking the card on mobile accelerates reveal
+    if('ontouchstart' in window){
+      document.querySelector('.card').addEventListener('touchstart', ()=> {
+        links.forEach(l=> l.classList.add('reveal'));
+      }, {once:true});
+    }
+
+    // Optional: keyboard accessibility - Enter on links works by default.
+  </script>
+</body>
+</html>
