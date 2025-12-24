@@ -30,6 +30,7 @@ body{
     linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
   transition:background 1s ease;
   overflow-x: hidden;
+  position: relative;
 }
 
 body.light{
@@ -45,6 +46,8 @@ body.light{
   justify-content:space-between;
   align-items:center;
   padding:14px;
+  position: relative;
+  z-index: 10;
 }
 
 .icon-btn{
@@ -63,45 +66,68 @@ body.light{
 }
 
 /* ===== Counter Styling ===== */
+.counter-wrapper {
+  position: relative;
+  padding: 20px 0;
+}
+
 .counter-container {
   background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(10px);
-  margin: 10px 16px;
-  padding: 15px;
-  border-radius: 20px;
+  margin: 0 16px;
+  padding: 20px;
+  border-radius: 25px;
   text-align: center;
-  border: 1px solid rgba(212, 175, 55, 0.4);
+  border: 2px solid rgba(212, 175, 55, 0.6);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+  position: relative;
+  z-index: 2;
+}
+
+.bg-heart {
+  position: absolute;
+  font-size: 18px;
+  animation: pulseHeart 2s infinite ease-in-out;
+  color: #ff4d6d;
+  opacity: 0.6;
+}
+
+@keyframes pulseHeart {
+  0%, 100% { transform: scale(1); opacity: 0.4; }
+  50% { transform: scale(1.3); opacity: 0.8; }
 }
 
 .counter-title {
-  font-size: 14px;
-  margin-bottom: 8px;
-  opacity: 0.9;
+  font-size: 16px;
+  margin-bottom: 15px;
+  font-weight: bold;
   color: #fff;
 }
 
 .counter-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
 }
 
 .counter-item {
   display: flex;
   flex-direction: column;
+  background: rgba(255,255,255,0.05);
+  padding: 8px 2px;
+  border-radius: 12px;
 }
 
 .counter-val {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 900;
   color: var(--gold);
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 1), 0 0 10px rgba(212, 175, 55, 0.3);
 }
 
 .counter-label {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
-  color: #eee;
+  color: #ddd;
 }
 
 /* ===== Containers ===== */
@@ -109,6 +135,8 @@ body.light{
   max-width:430px;
   margin:auto;
   padding:16px;
+  position: relative;
+  z-index: 5;
 }
 
 .hidden{display:none}
@@ -120,6 +148,7 @@ input,textarea,button{
   border-radius:14px;
   border:none;
   font-family:inherit;
+  box-sizing: border-box;
 }
 
 input,textarea{
@@ -131,6 +160,7 @@ button{
   background:var(--btn);
   color:var(--btnText);
   font-weight:700;
+  cursor: pointer;
 }
 
 /* ===== Add Box ===== */
@@ -163,52 +193,41 @@ button{
   transition:.4s ease;
 }
 
-/* ❤️ تجميل القلوب (خفيفة وبطيئة) */
-.heart{
-  position:absolute;
+/* القلوب الطائرة */
+.heart-pop{
+  position:fixed;
   color:#ff4d6d;
-  font-size:20px;
+  font-size:24px;
   pointer-events:none;
-  z-index: 1000;
-  opacity: 0;
-  animation:heartFloat 3.5s ease-out forwards;
+  z-index: 9999;
+  animation:popOut 1.2s ease-out forwards;
 }
 
-@keyframes heartFloat{
-  0%{
-    opacity:0;
-    transform:translateY(0) scale(0.5) rotate(0deg);
-  }
-  20%{
-    opacity:0.7;
-  }
-  100%{
-    opacity:0;
-    transform:translateY(-150px) scale(1.5) rotate(20deg);
-  }
+@keyframes popOut{
+  0%{ transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+  100%{ transform: translate(-50%, -200px) scale(1.5) rotate(20deg); opacity: 0; }
 }
 
-/* 💜 نص الحب */
-.love-text{
-  position:absolute;
-  font-size:15px;
-  color:#ffd6ff;
+.love-text-pop{
+  position:fixed;
+  font-size:16px;
+  color:#fff;
   font-weight:700;
-  opacity:0;
-  animation:loveFloat 3s ease forwards;
+  text-shadow: 0 0 10px #ff4d6d;
   pointer-events:none;
-  white-space:nowrap;
-  z-index: 1000;
+  z-index: 9999;
+  animation:textFloatUp 1.5s ease-out forwards;
+  white-space: nowrap;
 }
-@keyframes loveFloat{
-  0%{opacity:0;transform:translateY(0) scale(.9)}
-  15%{opacity:1}
-  100%{opacity:0;transform:translateY(-100px) scale(1.1)}
+
+@keyframes textFloatUp {
+  0% { transform: translate(-50%, -50%); opacity: 1; }
+  100% { transform: translate(-50%, -120px); opacity: 0; }
 }
 
 .actions{ display:flex; gap:8px; margin-top:8px; }
 .action-btn{ width:36px; height:36px; border-radius:12px; background:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; }
-.viewer{ position:fixed; inset:0; background:#000c; display:flex; align-items:center; justify-content:center; z-index:2000; }
+.viewer{ position:fixed; inset:0; background:#000c; display:flex; align-items:center; justify-content:center; z-index:10000; }
 .viewer img{ max-width:90%; max-height:90%; border-radius:20px; }
 </style>
 </head>
@@ -228,13 +247,21 @@ button{
 
 <div id="app" class="container hidden">
   
-  <div class="counter-container">
-    <div class="counter-title">بقالنا مع بعض يا روحي ❤️</div>
-    <div class="counter-grid" id="timer">
-      <div class="counter-item"><span class="counter-val" id="months">0</span><span class="counter-label">شهر</span></div>
-      <div class="counter-item"><span class="counter-val" id="days">0</span><span class="counter-label">يوم</span></div>
-      <div class="counter-item"><span class="counter-val" id="hours">0</span><span class="counter-label">ساعة</span></div>
-      <div class="counter-item"><span class="counter-val" id="seconds">0</span><span class="counter-label">ثانية</span></div>
+  <div class="counter-wrapper">
+    <div class="bg-heart" style="top:0; left:10px;">❤️</div>
+    <div class="bg-heart" style="bottom:0; right:10px;">💖</div>
+    <div class="bg-heart" style="top:10px; right:15px;">💕</div>
+    <div class="bg-heart" style="bottom:5px; left:20px;">💗</div>
+    
+    <div class="counter-container">
+      <div class="counter-title" id="counterTitle">بقالنا مع بعض يا روحي ❤️</div>
+      <div class="counter-grid" id="timer">
+        <div class="counter-item"><span class="counter-val" id="months">0</span><span class="counter-label">شهر</span></div>
+        <div class="counter-item"><span class="counter-val" id="days">0</span><span class="counter-label">يوم</span></div>
+        <div class="counter-item"><span class="counter-val" id="hours">0</span><span class="counter-label">ساعة</span></div>
+        <div class="counter-item"><span class="counter-val" id="minutes">0</span><span class="counter-label">دقيقة</span></div>
+        <div class="counter-item"><span class="counter-val" id="seconds">0</span><span class="counter-label">ثانية</span></div>
+      </div>
     </div>
   </div>
 
@@ -248,11 +275,9 @@ button{
   <div id="gallery"></div>
 </div>
 
-<audio id="likeSound" src="https://assets.mixkit.co/sfx/preview/mixkit-soft-click-tone-1112.mp3"></audio>
-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBuSYBywG6Jn-pTaqkKEDcbYeORukEh1pU",
@@ -266,164 +291,181 @@ const firebaseConfig = {
 const appFirebase = initializeApp(firebaseConfig);
 const db = getFirestore(appFirebase);
 
-const REAL_PASSWORD="25102007";
-// تاريخ الارتباط: 29/11/2025 الساعة 11:30 مساءً
+const REAL_PASSWORD = "25102007";
+// تاريخ الارتباط: 29/11/2025 الساعة 11:30 مساءً (23:30)
 const relationshipDate = new Date(2025, 10, 29, 23, 30); 
 
-const loginDiv=document.getElementById("login");
-const app=document.getElementById("app");
-const gallery=document.getElementById("gallery");
-const addBox=document.getElementById("addBox");
+const loginDiv = document.getElementById("login");
+const appDiv = document.getElementById("app");
+const gallery = document.getElementById("gallery");
+const addBox = document.getElementById("addBox");
+let isLoggedIn = false;
 
-window.login=()=>{
-  if(password.value===REAL_PASSWORD){
+window.login = () => {
+  if (document.getElementById("password").value === REAL_PASSWORD) {
     loginDiv.classList.add("hidden");
-    app.classList.remove("hidden");
+    appDiv.classList.remove("hidden");
+    isLoggedIn = true;
     loadPhotos();
     startCounter();
-  }else alert("كلمة السر غلط");
+    enableGlobalHearts();
+  } else alert("كلمة السر غلط");
 }
 
 function startCounter() {
   setInterval(() => {
     const now = new Date();
     let diff = now - relationshipDate;
-    
     let isFuture = diff < 0;
-    let absoluteDiff = Math.abs(diff);
+    let absDiff = Math.abs(diff);
 
-    let totalSeconds = Math.floor(absoluteDiff / 1000);
-    
+    let totalSeconds = Math.floor(absDiff / 1000);
     let seconds = totalSeconds % 60;
     let totalMinutes = Math.floor(totalSeconds / 60);
-    
     let minutes = totalMinutes % 60;
     let totalHours = Math.floor(totalMinutes / 60);
-    
     let hours = totalHours % 24;
     let totalDays = Math.floor(totalHours / 24);
-
+    
     let months = Math.floor(totalDays / 30.44);
     let days = Math.floor(totalDays % 30.44);
 
     document.getElementById("months").innerText = months;
     document.getElementById("days").innerText = days;
     document.getElementById("hours").innerText = hours;
+    document.getElementById("minutes").innerText = minutes;
     document.getElementById("seconds").innerText = seconds;
     
-    const title = document.querySelector('.counter-title');
-    if(isFuture) {
-        title.innerText = "باقي على ارتباطنا يا روحي ❤️";
-    } else {
-        title.innerText = "بقالنا مع بعض يا روحي ❤️";
-    }
+    const title = document.getElementById('counterTitle');
+    title.innerText = isFuture ? "باقي على ارتباطنا يا روحي ❤️" : "بقالنا مع بعض يا روحي ❤️";
   }, 1000);
 }
 
-window.toggleAdd=()=>{
+function enableGlobalHearts() {
+  document.addEventListener('click', (e) => {
+    if (!isLoggedIn) return;
+    
+    const heart = document.createElement('div');
+    heart.className = 'heart-pop';
+    heart.innerHTML = '❤️';
+    heart.style.left = e.clientX + 'px';
+    heart.style.top = e.clientY + 'px';
+    document.body.appendChild(heart);
+    
+    const text = document.createElement('div');
+    text.className = 'love-text-pop';
+    text.innerHTML = 'بحبك يا شهودتي 💕🌚';
+    text.style.left = e.clientX + 'px';
+    text.style.top = (e.clientY - 25) + 'px';
+    document.body.appendChild(text);
+    
+    setTimeout(() => {
+      heart.remove();
+      text.remove();
+    }, 1500);
+  });
+}
+
+window.toggleAdd = () => {
   addBox.classList.toggle("show");
   addBox.classList.toggle("hide");
 }
 
-window.toggleTheme=()=>{
+window.toggleTheme = () => {
   document.body.classList.toggle("light");
-  localStorage.theme=document.body.classList.contains("light")?"light":"dark";
+  localStorage.theme = document.body.classList.contains("light") ? "light" : "dark";
 }
 
-if(localStorage.theme==="light") document.body.classList.add("light");
+if (localStorage.theme === "light") document.body.classList.add("light");
 
-window.addPhoto=()=>{
-  const file=image.files[0];
-  if(!file) return alert("اختر صورة");
-  const r=new FileReader();
-  r.onload=async()=>{
-    await addDoc(collection(db,"images"),{
-      img:r.result,
-      date:date.value,
-      desc:desc.value,
-      createdAt:Date.now()
-    });
-    image.value="";date.value="";desc.value="";
-    loadPhotos();
+window.addPhoto = () => {
+  const imageInput = document.getElementById("image");
+  const dateInput = document.getElementById("date");
+  const descInput = document.getElementById("desc");
+  
+  const file = imageInput.files[0];
+  if (!file) return alert("اختر صورة");
+  
+  const r = new FileReader();
+  r.onload = async () => {
+    try {
+      await addDoc(collection(db, "images"), {
+        img: r.result,
+        date: dateInput.value, // هذا هو التاريخ الذي سنعتمد عليه في الترتيب
+        desc: descInput.value,
+        createdAt: Date.now()
+      });
+      imageInput.value = "";
+      dateInput.value = "";
+      descInput.value = "";
+      loadPhotos();
+    } catch (e) {
+      alert("حدث خطأ أثناء الرفع");
+    }
   };
   r.readAsDataURL(file);
 }
 
-async function loadPhotos(){
-  gallery.innerHTML="";
-  const snap=await getDocs(collection(db,"images"));
+async function loadPhotos() {
+  gallery.innerHTML = "<p style='text-align:center'>جاري تحميل ذكرياتنا...</p>";
+  
+  const snap = await getDocs(collection(db, "images"));
   let photos = [];
   snap.forEach(d => photos.push({ id: d.id, ...d.data() }));
 
+  // ترتيب الصور حسب حقل التاريخ (date) المكتوب من الأحدث للأقدم
   photos.sort((a, b) => {
-    const dateA = a.date || "0000-00-00";
-    const dateB = b.date || "0000-00-00";
-    if (dateB !== dateA) return dateB.localeCompare(dateA);
-    return (b.createdAt || 0) - (a.createdAt || 0);
+    const dateA = a.date ? new Date(a.date) : new Date(0);
+    const dateB = b.date ? new Date(b.date) : new Date(0);
+    
+    // إذا تساوى التاريخ، نرتب حسب وقت الرفع (createdAt)
+    if (dateB - dateA === 0) {
+        return (b.createdAt || 0) - (a.createdAt || 0);
+    }
+    return dateB - dateA;
   });
 
-  photos.forEach(p=>{
-    gallery.innerHTML+=`
-    <div class="card">
-      <img src="${p.img}" onclick="like(event,'${p.img}')">
-      <div>📅 ${p.date||""}</div>
-      <div>${p.desc||""}</div>
+  gallery.innerHTML = "";
+  if(photos.length === 0) gallery.innerHTML = "<p style='text-align:center'>لسه مفيش صور يا روحي</p>";
+
+  photos.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <img src="${p.img}" onclick="openImg('${p.img}')" loading="lazy">
+      <div style="margin-top:8px; font-size:13px; opacity:0.8;">📅 ${p.date || "بدون تاريخ"}</div>
+      <div style="font-weight:bold; margin:5px 0;">${p.desc || ""}</div>
       <div class="actions">
         <div class="action-btn" onclick="editPhoto('${p.id}')">✏️</div>
         <div class="action-btn" onclick="deletePhoto('${p.id}')">🗑</div>
       </div>
-    </div>`;
+    `;
+    gallery.appendChild(card);
   });
 }
 
-window.like=(e,src)=>{
-  document.getElementById("likeSound").play();
-  
-  // إنشاء عدة قلوب بتوقيتات مختلفة قليلاً لزيادة الجمال
-  for(let i=0; i<3; i++){
-    setTimeout(() => {
-        const h=document.createElement("div");
-        h.className="heart";
-        // إضافة تباين عشوائي بسيط في مكان الظهور
-        h.style.left=(e.pageX + (Math.random() * 40 - 20))+"px";
-        h.style.top=(e.pageY + (Math.random() * 40 - 20))+"px";
-        h.innerHTML="❤";
-        document.body.appendChild(h);
-        setTimeout(()=>h.remove(), 3500);
-    }, i * 300);
-  }
-
-  const t=document.createElement("div");
-  t.className="love-text";
-  t.style.left=(e.pageX-35)+"px";
-  t.style.top=(e.pageY-15)+"px";
-  t.innerHTML="بحبك يا شهودتي 🌚♥";
-  document.body.appendChild(t);
-  setTimeout(()=>t.remove(), 3000);
-  
-  openImg(src);
-}
-
-window.openImg=src=>{
-  const v=document.createElement("div");
-  v.className="viewer";
-  v.innerHTML=`<img src="${src}">`;
-  v.onclick=()=>v.remove();
+window.openImg = src => {
+  const v = document.createElement("div");
+  v.className = "viewer";
+  v.innerHTML = `<img src="${src}">`;
+  v.onclick = () => v.remove();
   document.body.appendChild(v);
 }
 
-window.deletePhoto=async id=>{
-  if(prompt("كلمة السر")!==REAL_PASSWORD) return;
-  await deleteDoc(doc(db,"images",id));
+window.deletePhoto = async id => {
+  if (prompt("كلمة السر للمسح") !== REAL_PASSWORD) return;
+  await deleteDoc(doc(db, "images", id));
   loadPhotos();
 }
 
-window.editPhoto=async id=>{
-  if(prompt("كلمة السر")!==REAL_PASSWORD) return;
-  const d=prompt("الوصف الجديد");
-  const dt=prompt("التاريخ");
-  await updateDoc(doc(db,"images",id),{desc:d,date:dt});
-  loadPhotos();
+window.editPhoto = async id => {
+  if (prompt("كلمة السر للتعديل") !== REAL_PASSWORD) return;
+  const d = prompt("الوصف الجديد");
+  const dt = prompt("التاريخ (YYYY-MM-DD)");
+  if (d !== null) {
+    await updateDoc(doc(db, "images", id), { desc: d, date: dt });
+    loadPhotos();
+  }
 }
 </script>
 
