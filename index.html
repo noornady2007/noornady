@@ -8,25 +8,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-
-.love-text{
-  position:absolute;
-  font-size:15px;
-  color:#ffd6ff;
-  font-weight:700;
-  opacity:0;
-  animation:loveFloat 2.5s ease forwards;
-  pointer-events:none;
-  white-space:nowrap;
-}
-
-@keyframes loveFloat{
-  0%{opacity:0;transform:translateY(0) scale(.9)}
-  20%{opacity:1}
-  100%{opacity:0;transform:translateY(-120px) scale(1.1)}
-}
-
-
 :root{
   --bg1:#3c096c;
   --bg2:#5a189a;
@@ -35,6 +16,7 @@
   --text:#fff;
   --btn:#e0aaff;
   --btnText:#240046;
+  --gold: #d4af37;
 }
 
 body{
@@ -47,6 +29,7 @@ body{
     radial-gradient(circle at bottom right,#ffafcc33,transparent 45%),
     linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
   transition:background 1s ease;
+  overflow-x: hidden;
 }
 
 body.light{
@@ -77,6 +60,48 @@ body.light{
 .header-title{
   font-weight:700;
   font-size:20px;
+}
+
+/* ===== Counter Styling ===== */
+.counter-container {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  margin: 10px 16px;
+  padding: 15px;
+  border-radius: 20px;
+  text-align: center;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+}
+
+.counter-title {
+  font-size: 14px;
+  margin-bottom: 8px;
+  opacity: 0.9;
+  color: #fff;
+}
+
+.counter-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.counter-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.counter-val {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--gold);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 1), 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
+.counter-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #eee;
 }
 
 /* ===== Containers ===== */
@@ -137,71 +162,54 @@ button{
   cursor:pointer;
   transition:.4s ease;
 }
-.card img:hover{
-  filter:blur(1px);
-  transform:scale(1.02);
-}
 
-/* ===== Actions ===== */
-.actions{
-  display:flex;
-  gap:8px;
-  margin-top:8px;
-}
-.action-btn{
-  width:36px;height:36px;
-  border-radius:12px;
-  background:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-}
-
-/* ===== Viewer ===== */
-.viewer{
-  position:fixed;
-  inset:0;
-  background:#000c;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:100;
-}
-.viewer img{
-  max-width:90%;
-  max-height:90%;
-  border-radius:20px;
-}
-
-/* ❤️ Heart */
+/* ❤️ تجميل القلوب (خفيفة وبطيئة) */
 .heart{
   position:absolute;
   color:#ff4d6d;
-  font-size:24px;
-  animation:heart 1.5s ease forwards;
-}
-@keyframes heart{
-  0%{opacity:1;transform:translateY(0) scale(1)}
-  100%{opacity:0;transform:translateY(-80px) scale(1.6)}
+  font-size:20px;
+  pointer-events:none;
+  z-index: 1000;
+  opacity: 0;
+  animation:heartFloat 3.5s ease-out forwards;
 }
 
-/* 💜 Love Text */
+@keyframes heartFloat{
+  0%{
+    opacity:0;
+    transform:translateY(0) scale(0.5) rotate(0deg);
+  }
+  20%{
+    opacity:0.7;
+  }
+  100%{
+    opacity:0;
+    transform:translateY(-150px) scale(1.5) rotate(20deg);
+  }
+}
+
+/* 💜 نص الحب */
 .love-text{
   position:absolute;
   font-size:15px;
   color:#ffd6ff;
   font-weight:700;
   opacity:0;
-  animation:loveFloat 2.5s ease forwards;
+  animation:loveFloat 3s ease forwards;
   pointer-events:none;
   white-space:nowrap;
+  z-index: 1000;
 }
 @keyframes loveFloat{
   0%{opacity:0;transform:translateY(0) scale(.9)}
-  20%{opacity:1}
-  100%{opacity:0;transform:translateY(-120px) scale(1.1)}
+  15%{opacity:1}
+  100%{opacity:0;transform:translateY(-100px) scale(1.1)}
 }
+
+.actions{ display:flex; gap:8px; margin-top:8px; }
+.action-btn{ width:36px; height:36px; border-radius:12px; background:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+.viewer{ position:fixed; inset:0; background:#000c; display:flex; align-items:center; justify-content:center; z-index:2000; }
+.viewer img{ max-width:90%; max-height:90%; border-radius:20px; }
 </style>
 </head>
 
@@ -219,6 +227,16 @@ button{
 </div>
 
 <div id="app" class="container hidden">
+  
+  <div class="counter-container">
+    <div class="counter-title">بقالنا مع بعض يا روحي ❤️</div>
+    <div class="counter-grid" id="timer">
+      <div class="counter-item"><span class="counter-val" id="months">0</span><span class="counter-label">شهر</span></div>
+      <div class="counter-item"><span class="counter-val" id="days">0</span><span class="counter-label">يوم</span></div>
+      <div class="counter-item"><span class="counter-val" id="hours">0</span><span class="counter-label">ساعة</span></div>
+      <div class="counter-item"><span class="counter-val" id="seconds">0</span><span class="counter-label">ثانية</span></div>
+    </div>
+  </div>
 
   <div id="addBox" class="hide">
     <input type="file" id="image" accept="image/*">
@@ -249,6 +267,9 @@ const appFirebase = initializeApp(firebaseConfig);
 const db = getFirestore(appFirebase);
 
 const REAL_PASSWORD="25102007";
+// تاريخ الارتباط: 29/11/2025 الساعة 11:30 مساءً
+const relationshipDate = new Date(2025, 10, 29, 23, 30); 
+
 const loginDiv=document.getElementById("login");
 const app=document.getElementById("app");
 const gallery=document.getElementById("gallery");
@@ -259,7 +280,44 @@ window.login=()=>{
     loginDiv.classList.add("hidden");
     app.classList.remove("hidden");
     loadPhotos();
+    startCounter();
   }else alert("كلمة السر غلط");
+}
+
+function startCounter() {
+  setInterval(() => {
+    const now = new Date();
+    let diff = now - relationshipDate;
+    
+    let isFuture = diff < 0;
+    let absoluteDiff = Math.abs(diff);
+
+    let totalSeconds = Math.floor(absoluteDiff / 1000);
+    
+    let seconds = totalSeconds % 60;
+    let totalMinutes = Math.floor(totalSeconds / 60);
+    
+    let minutes = totalMinutes % 60;
+    let totalHours = Math.floor(totalMinutes / 60);
+    
+    let hours = totalHours % 24;
+    let totalDays = Math.floor(totalHours / 24);
+
+    let months = Math.floor(totalDays / 30.44);
+    let days = Math.floor(totalDays % 30.44);
+
+    document.getElementById("months").innerText = months;
+    document.getElementById("days").innerText = days;
+    document.getElementById("hours").innerText = hours;
+    document.getElementById("seconds").innerText = seconds;
+    
+    const title = document.querySelector('.counter-title');
+    if(isFuture) {
+        title.innerText = "باقي على ارتباطنا يا روحي ❤️";
+    } else {
+        title.innerText = "بقالنا مع بعض يا روحي ❤️";
+    }
+  }, 1000);
 }
 
 window.toggleAdd=()=>{
@@ -273,9 +331,6 @@ window.toggleTheme=()=>{
 }
 
 if(localStorage.theme==="light") document.body.classList.add("light");
-
-const hour=new Date().getHours();
-if(hour>=6 && hour<18) document.body.classList.add("light");
 
 window.addPhoto=()=>{
   const file=image.files[0];
@@ -296,18 +351,26 @@ window.addPhoto=()=>{
 
 async function loadPhotos(){
   gallery.innerHTML="";
-  const q=query(collection(db,"images"),orderBy("createdAt","desc"));
-  const snap=await getDocs(q);
-  snap.forEach(d=>{
-    const p=d.data();
+  const snap=await getDocs(collection(db,"images"));
+  let photos = [];
+  snap.forEach(d => photos.push({ id: d.id, ...d.data() }));
+
+  photos.sort((a, b) => {
+    const dateA = a.date || "0000-00-00";
+    const dateB = b.date || "0000-00-00";
+    if (dateB !== dateA) return dateB.localeCompare(dateA);
+    return (b.createdAt || 0) - (a.createdAt || 0);
+  });
+
+  photos.forEach(p=>{
     gallery.innerHTML+=`
     <div class="card">
       <img src="${p.img}" onclick="like(event,'${p.img}')">
       <div>📅 ${p.date||""}</div>
       <div>${p.desc||""}</div>
       <div class="actions">
-        <div class="action-btn" onclick="editPhoto('${d.id}')">✏️</div>
-        <div class="action-btn" onclick="deletePhoto('${d.id}')">🗑</div>
+        <div class="action-btn" onclick="editPhoto('${p.id}')">✏️</div>
+        <div class="action-btn" onclick="deletePhoto('${p.id}')">🗑</div>
       </div>
     </div>`;
   });
@@ -315,14 +378,20 @@ async function loadPhotos(){
 
 window.like=(e,src)=>{
   document.getElementById("likeSound").play();
-
-  const h=document.createElement("div");
-  h.className="heart";
-  h.style.left=e.pageX+"px";
-  h.style.top=e.pageY+"px";
-  h.innerHTML="❤";
-  document.body.appendChild(h);
-  setTimeout(()=>h.remove(),1500);
+  
+  // إنشاء عدة قلوب بتوقيتات مختلفة قليلاً لزيادة الجمال
+  for(let i=0; i<3; i++){
+    setTimeout(() => {
+        const h=document.createElement("div");
+        h.className="heart";
+        // إضافة تباين عشوائي بسيط في مكان الظهور
+        h.style.left=(e.pageX + (Math.random() * 40 - 20))+"px";
+        h.style.top=(e.pageY + (Math.random() * 40 - 20))+"px";
+        h.innerHTML="❤";
+        document.body.appendChild(h);
+        setTimeout(()=>h.remove(), 3500);
+    }, i * 300);
+  }
 
   const t=document.createElement("div");
   t.className="love-text";
@@ -330,8 +399,8 @@ window.like=(e,src)=>{
   t.style.top=(e.pageY-15)+"px";
   t.innerHTML="بحبك يا شهودتي 🌚♥";
   document.body.appendChild(t);
-  setTimeout(()=>t.remove(),2500);
-
+  setTimeout(()=>t.remove(), 3000);
+  
   openImg(src);
 }
 
@@ -360,3 +429,4 @@ window.editPhoto=async id=>{
 
 </body>
 </html>
+
