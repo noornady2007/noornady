@@ -25,7 +25,8 @@
   20%{opacity:1}
   100%{opacity:0;transform:translateY(-120px) scale(1.1)}
 }
-  
+
+
 :root{
   --bg1:#3c096c;
   --bg2:#5a189a;
@@ -48,7 +49,6 @@ body{
   transition:background 1s ease;
 }
 
-/* 🌞 Light */
 body.light{
   --bg1:#ffe5ff;
   --bg2:#e0aaff;
@@ -185,6 +185,23 @@ button{
   0%{opacity:1;transform:translateY(0) scale(1)}
   100%{opacity:0;transform:translateY(-80px) scale(1.6)}
 }
+
+/* 💜 Love Text */
+.love-text{
+  position:absolute;
+  font-size:15px;
+  color:#ffd6ff;
+  font-weight:700;
+  opacity:0;
+  animation:loveFloat 2.5s ease forwards;
+  pointer-events:none;
+  white-space:nowrap;
+}
+@keyframes loveFloat{
+  0%{opacity:0;transform:translateY(0) scale(.9)}
+  20%{opacity:1}
+  100%{opacity:0;transform:translateY(-120px) scale(1.1)}
+}
 </style>
 </head>
 
@@ -257,7 +274,6 @@ window.toggleTheme=()=>{
 
 if(localStorage.theme==="light") document.body.classList.add("light");
 
-/* 🧠 الوضع الذكي */
 const hour=new Date().getHours();
 if(hour>=6 && hour<18) document.body.classList.add("light");
 
@@ -299,6 +315,7 @@ async function loadPhotos(){
 
 window.like=(e,src)=>{
   document.getElementById("likeSound").play();
+
   const h=document.createElement("div");
   h.className="heart";
   h.style.left=e.pageX+"px";
@@ -306,6 +323,15 @@ window.like=(e,src)=>{
   h.innerHTML="❤";
   document.body.appendChild(h);
   setTimeout(()=>h.remove(),1500);
+
+  const t=document.createElement("div");
+  t.className="love-text";
+  t.style.left=(e.pageX-35)+"px";
+  t.style.top=(e.pageY-15)+"px";
+  t.innerHTML="بحبك يا شهودتي 🌚♥";
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),2500);
+
   openImg(src);
 }
 
