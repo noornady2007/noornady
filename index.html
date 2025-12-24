@@ -8,6 +8,24 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
+
+.love-text{
+  position:absolute;
+  font-size:15px;
+  color:#ffd6ff;
+  font-weight:700;
+  opacity:0;
+  animation:loveFloat 2.5s ease forwards;
+  pointer-events:none;
+  white-space:nowrap;
+}
+
+@keyframes loveFloat{
+  0%{opacity:0;transform:translateY(0) scale(.9)}
+  20%{opacity:1}
+  100%{opacity:0;transform:translateY(-120px) scale(1.1)}
+}
+  
 :root{
   --bg1:#3c096c;
   --bg2:#5a189a;
