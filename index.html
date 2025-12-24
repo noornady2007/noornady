@@ -8,52 +8,198 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-/* === نفس الستايل بدون أي تغيير === */
 :root{
-  --bg1:#4b1d6f; --bg2:#9b5de5; --card:rgba(255,255,255,.18);
-  --text:#fff; --btn:#e0aaff; --btnText:#3c096c;
+  --bg1:#3c096c;
+  --bg2:#5a189a;
+  --bg3:#240046;
+  --glass:rgba(255,255,255,.16);
+  --text:#fff;
+  --btn:#e0aaff;
+  --btnText:#240046;
 }
-body.dark{
-  --bg1:#120016; --bg2:#2b0038; --card:rgba(255,255,255,.12);
-  --text:#f5eaff; --btn:#ffb3ff; --btnText:#2b0038;
-}
+
 body{
-  margin:0;font-family:'Cairo',sans-serif;color:var(--text);
-  background:linear-gradient(135deg,var(--bg1),var(--bg2));
+  margin:0;
+  font-family:'Cairo',sans-serif;
+  color:var(--text);
+  min-height:100vh;
+  background:
+    radial-gradient(circle at top left,#7b2cbf55,transparent 45%),
+    radial-gradient(circle at bottom right,#ffafcc33,transparent 45%),
+    linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
+  transition:background 1s ease;
 }
+
+/* 🌞 Light */
+body.light{
+  --bg1:#ffe5ff;
+  --bg2:#e0aaff;
+  --bg3:#c77dff;
+  --text:#3c096c;
+}
+
+/* ===== Header ===== */
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px;
+}
+
+.icon-btn{
+  width:42px;height:42px;
+  border-radius:14px;
+  background:rgba(255,255,255,.25);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+}
+
+.header-title{
+  font-weight:700;
+  font-size:20px;
+}
+
+/* ===== Containers ===== */
+.container{
+  max-width:430px;
+  margin:auto;
+  padding:16px;
+}
+
 .hidden{display:none}
-.container{max-width:430px;margin:auto;padding:16px}
-input,textarea,button{width:100%;padding:12px;margin:8px 0;border-radius:12px;border:none}
-button{background:var(--btn);color:var(--btnText);font-weight:700}
-.card{background:var(--card);border-radius:16px;padding:12px;margin-top:14px}
-.card img{width:100%;border-radius:12px}
-.viewer{position:fixed;inset:0;background:#000a;display:flex;align-items:center;justify-content:center}
-.viewer img{max-width:90%;max-height:90%;border-radius:16px}
+
+input,textarea,button{
+  width:100%;
+  padding:14px;
+  margin:8px 0;
+  border-radius:14px;
+  border:none;
+  font-family:inherit;
+}
+
+input,textarea{
+  background:rgba(255,255,255,.25);
+  color:#fff;
+}
+
+button{
+  background:var(--btn);
+  color:var(--btnText);
+  font-weight:700;
+}
+
+/* ===== Add Box ===== */
+#addBox{
+  overflow:hidden;
+  transition:.6s ease;
+}
+#addBox.hide{max-height:0;opacity:0;transform:translateY(-20px)}
+#addBox.show{max-height:500px;opacity:1;transform:translateY(0)}
+
+/* ===== Cards ===== */
+.card{
+  background:var(--glass);
+  backdrop-filter:blur(18px);
+  border-radius:20px;
+  padding:12px;
+  margin-top:18px;
+  animation:fadeIn .8s ease;
+}
+
+@keyframes fadeIn{
+  from{opacity:0;transform:scale(.95)}
+  to{opacity:1;transform:scale(1)}
+}
+
+.card img{
+  width:100%;
+  border-radius:14px;
+  cursor:pointer;
+  transition:.4s ease;
+}
+.card img:hover{
+  filter:blur(1px);
+  transform:scale(1.02);
+}
+
+/* ===== Actions ===== */
+.actions{
+  display:flex;
+  gap:8px;
+  margin-top:8px;
+}
+.action-btn{
+  width:36px;height:36px;
+  border-radius:12px;
+  background:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+}
+
+/* ===== Viewer ===== */
+.viewer{
+  position:fixed;
+  inset:0;
+  background:#000c;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:100;
+}
+.viewer img{
+  max-width:90%;
+  max-height:90%;
+  border-radius:20px;
+}
+
+/* ❤️ Heart */
+.heart{
+  position:absolute;
+  color:#ff4d6d;
+  font-size:24px;
+  animation:heart 1.5s ease forwards;
+}
+@keyframes heart{
+  0%{opacity:1;transform:translateY(0) scale(1)}
+  100%{opacity:0;transform:translateY(-80px) scale(1.6)}
+}
 </style>
 </head>
 
 <body>
 
+<div class="header">
+  <div class="icon-btn" onclick="toggleTheme()">🌙</div>
+  <div class="header-title">SHAHD♡NOOR 💜</div>
+  <div class="icon-btn" onclick="toggleAdd()">⋮</div>
+</div>
+
 <div id="login" class="container">
-  <h1>🔐 SHAHD♡NOOR</h1>
   <input type="password" id="password" placeholder="كلمة السر">
   <button onclick="login()">دخول</button>
 </div>
 
 <div id="app" class="container hidden">
-  <input type="file" id="image" accept="image/*">
-  <input type="date" id="date">
-  <textarea id="desc" placeholder="وصف الصورة"></textarea>
-  <button onclick="addPhoto()">🥰</button>
+
+  <div id="addBox" class="hide">
+    <input type="file" id="image" accept="image/*">
+    <input type="date" id="date">
+    <textarea id="desc" placeholder="وصف الصورة"></textarea>
+    <button onclick="addPhoto()">إضافة صورة</button>
+  </div>
+
   <div id="gallery"></div>
 </div>
 
-<!-- Firebase -->
+<audio id="likeSound" src="https://assets.mixkit.co/sfx/preview/mixkit-soft-click-tone-1112.mp3"></audio>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBuSYBywG6Jn-pTaqkKEDcbYeORukEh1pU",
@@ -71,18 +217,35 @@ const REAL_PASSWORD="25102007";
 const loginDiv=document.getElementById("login");
 const app=document.getElementById("app");
 const gallery=document.getElementById("gallery");
+const addBox=document.getElementById("addBox");
 
 window.login=()=>{
   if(password.value===REAL_PASSWORD){
     loginDiv.classList.add("hidden");
     app.classList.remove("hidden");
     loadPhotos();
-  } else alert("كلمة السر غلط");
+  }else alert("كلمة السر غلط");
 }
+
+window.toggleAdd=()=>{
+  addBox.classList.toggle("show");
+  addBox.classList.toggle("hide");
+}
+
+window.toggleTheme=()=>{
+  document.body.classList.toggle("light");
+  localStorage.theme=document.body.classList.contains("light")?"light":"dark";
+}
+
+if(localStorage.theme==="light") document.body.classList.add("light");
+
+/* 🧠 الوضع الذكي */
+const hour=new Date().getHours();
+if(hour>=6 && hour<18) document.body.classList.add("light");
 
 window.addPhoto=()=>{
   const file=image.files[0];
-  if(!file) return;
+  if(!file) return alert("اختر صورة");
   const r=new FileReader();
   r.onload=async()=>{
     await addDoc(collection(db,"images"),{
@@ -104,20 +267,50 @@ async function loadPhotos(){
   snap.forEach(d=>{
     const p=d.data();
     gallery.innerHTML+=`
-      <div class="card">
-        <img src="${p.img}" onclick="openImg('${p.img}')">
-        <div>📅 ${p.date||""}</div>
-        <div>${p.desc||""}</div>
-      </div>`;
+    <div class="card">
+      <img src="${p.img}" onclick="like(event,'${p.img}')">
+      <div>📅 ${p.date||""}</div>
+      <div>${p.desc||""}</div>
+      <div class="actions">
+        <div class="action-btn" onclick="editPhoto('${d.id}')">✏️</div>
+        <div class="action-btn" onclick="deletePhoto('${d.id}')">🗑</div>
+      </div>
+    </div>`;
   });
 }
 
-window.openImg=(src)=>{
+window.like=(e,src)=>{
+  document.getElementById("likeSound").play();
+  const h=document.createElement("div");
+  h.className="heart";
+  h.style.left=e.pageX+"px";
+  h.style.top=e.pageY+"px";
+  h.innerHTML="❤";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),1500);
+  openImg(src);
+}
+
+window.openImg=src=>{
   const v=document.createElement("div");
   v.className="viewer";
   v.innerHTML=`<img src="${src}">`;
   v.onclick=()=>v.remove();
   document.body.appendChild(v);
+}
+
+window.deletePhoto=async id=>{
+  if(prompt("كلمة السر")!==REAL_PASSWORD) return;
+  await deleteDoc(doc(db,"images",id));
+  loadPhotos();
+}
+
+window.editPhoto=async id=>{
+  if(prompt("كلمة السر")!==REAL_PASSWORD) return;
+  const d=prompt("الوصف الجديد");
+  const dt=prompt("التاريخ");
+  await updateDoc(doc(db,"images",id),{desc:d,date:dt});
+  loadPhotos();
 }
 </script>
 
