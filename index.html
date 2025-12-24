@@ -65,7 +65,6 @@ button{background:var(--btn);color:var(--btnText);font-weight:700;cursor:pointer
   from{opacity:0;transform:scale(.95)}
   to{opacity:1;transform:scale(1)}
 }
-
 @keyframes slideUp{
   from{opacity:0;transform:translateY(20px)}
   to{opacity:1;transform:translateY(0)}
@@ -80,17 +79,11 @@ button{background:var(--btn);color:var(--btnText);font-weight:700;cursor:pointer
   align-items:center;
   justify-content:center;
   z-index:99;
-  animation: fadeIn .4s ease;
 }
 .viewer img{
   max-width:90%;
   max-height:90%;
   border-radius:16px;
-  animation: zoom .4s ease;
-}
-@keyframes zoom{
-  from{transform:scale(.7)}
-  to{transform:scale(1)}
 }
 </style>
 </head>
@@ -124,84 +117,101 @@ button{background:var(--btn);color:var(--btnText);font-weight:700;cursor:pointer
 </div>
 
 <script>
-const REAL_PASSWORD="25102007";
-const loginDiv=document.getElementById("login");
-const app=document.getElementById("app");
-const gallery=document.getElementById("gallery");
-const form=document.getElementById("form");
+const REAL_PASSWORD = "25102007"; // غيرها لو حابب
+let currentUser = "";
+
+const loginDiv = document.getElementById("login");
+const app = document.getElementById("app");
+const gallery = document.getElementById("gallery");
+const form = document.getElementById("form");
 
 function login(){
-  if(password.value===REAL_PASSWORD){
+  if(password.value === REAL_PASSWORD){
+    currentUser = password.value;
     loginDiv.style.display="none";
     app.classList.remove("hidden");
-    app.classList.add("fadeIn");
     loadPhotos();
     applyTheme();
-  } else alert("كلمة السر غلط 💔");
+  } else {
+    alert("كلمة السر غلط 💔");
+  }
 }
 
 function toggleForm(){
   form.classList.toggle("hidden");
-  form.classList.add("fadeIn");
 }
 
 function toggleDark(){
-  const isDark=document.body.classList.toggle("dark");
-  localStorage.setItem("theme",isDark?"dark":"light");
+  const isDark = document.body.classList.toggle("dark");
+  localStorage.setItem("theme", isDark ? "dark" : "light");
 }
 function applyTheme(){
-  if(localStorage.getItem("theme")==="dark")
+  if(localStorage.getItem("theme") === "dark"){
     document.body.classList.add("dark");
+  }
 }
 
 function addPhoto(){
-  const file=image.files[0];
+  const file = image.files[0];
   if(!file) return;
-  const r=new FileReader();
-  r.onload=()=>{
-    const arr=JSON.parse(localStorage.getItem("photos")||"[]");
-    arr.push({img:r.result,date:date.value,desc:desc.value});
-    localStorage.setItem("photos",JSON.stringify(arr));
-    image.value="";date.value="";desc.value="";
+
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    const key = "photos_" + currentUser;
+    const arr = JSON.parse(localStorage.getItem(key) || "[]");
+
+    arr.push({
+      img: reader.result,
+      date: date.value,
+      desc: desc.value
+    });
+
+    localStorage.setItem(key, JSON.stringify(arr));
+    image.value=""; date.value=""; desc.value="";
     loadPhotos();
   };
-  r.readAsDataURL(file);
+  reader.readAsDataURL(file);
 }
 
 function delPhoto(i){
-  const pass=prompt("اكتب كلمة السر للتأكيد 🔐");
-  if(pass!==REAL_PASSWORD){
+  const pass = prompt("اكتب كلمة السر للتأكيد 🔐");
+  if(pass !== currentUser){
     alert("كلمة السر غير صحيحة ❌");
     return;
   }
-  const arr=JSON.parse(localStorage.getItem("photos")||"[]");
+
+  const key = "photos_" + currentUser;
+  const arr = JSON.parse(localStorage.getItem(key) || "[]");
   arr.splice(i,1);
-  localStorage.setItem("photos",JSON.stringify(arr));
+  localStorage.setItem(key, JSON.stringify(arr));
   loadPhotos();
 }
 
 function loadPhotos(){
   gallery.innerHTML="";
-  const arr=JSON.parse(localStorage.getItem("photos")||"[]");
+  const key = "photos_" + currentUser;
+  const arr = JSON.parse(localStorage.getItem(key) || "[]");
+
   arr.slice().reverse().forEach((p,idx)=>{
-    const realIndex=arr.length-1-idx;
-    gallery.innerHTML+=`
+    const realIndex = arr.length - 1 - idx;
+    gallery.innerHTML += `
       <div class="card">
         <img src="${p.img}" onclick="openImg('${p.img}')">
         <div class="meta">
-          <div class="date">📅 ${p.date||""}</div>
+          <div class="date">📅 ${p.date || ""}</div>
           <button class="iconBtn del" onclick="delPhoto(${realIndex})">🗑️</button>
         </div>
-        <div>${p.desc||""}</div>
-      </div>`;
+        <div>${p.desc || ""}</div>
+      </div>
+    `;
   });
 }
 
 function openImg(src){
-  const v=document.createElement("div");
-  v.className="viewer";
-  v.innerHTML=`<img src="${src}">`;
-  v.onclick=()=>v.remove();
+  const v = document.createElement("div");
+  v.className = "viewer";
+  v.innerHTML = `<img src="${src}">`;
+  v.onclick = ()=>v.remove();
   document.body.appendChild(v);
 }
 </script>
