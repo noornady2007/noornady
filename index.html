@@ -193,11 +193,11 @@ button:active { transform: scale(0.98); }
 }
 .action-btn:hover { background: var(--btn); transform: translateY(-3px); }
 
-/* ===== عارض الصور المطور ===== */
+/* ===== عارض الصور المطور مع الدوران السلس ===== */
 .viewer{ 
   position:fixed; inset:0; 
-  background:rgba(0,0,0,0);
-  backdrop-filter: blur(0px);
+  background:rgba(0,0,0,0); /* ستبدأ شفافة */
+  backdrop-filter: blur(0px); /* سيبدأ الطمس من الصفر */
   display:flex; align-items:center; justify-content:center; 
   z-index:10000; 
   transition: background 0.6s ease, backdrop-filter 0.6s ease;
@@ -211,18 +211,18 @@ button:active { transform: scale(0.98); }
 .viewer img{ 
   max-width:90%; max-height:85%; border-radius:15px; 
   box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-  transform: scale(0.5) rotate(-15deg);
+  transform: scale(0.5) rotate(-15deg); /* نقطة البداية: صغيرة ومدورة */
   opacity: 0;
   transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.6s ease; 
 }
 
 .viewer.active img {
-  transform: scale(1) rotate(0deg);
+  transform: scale(1) rotate(0deg); /* الحالة النهائية: حجم طبيعي ودوران مستوي */
   opacity: 1;
 }
 
 .viewer.closing img {
-  transform: scale(0.5) rotate(15deg);
+  transform: scale(0.5) rotate(15deg); /* عند الإغلاق: تدور للجهة الأخرى وتصغر */
   opacity: 0;
 }
 
@@ -239,43 +239,25 @@ button:active { transform: scale(0.98); }
   background: rgba(255,255,255,0.02);
 }
 
-.msg { max-width: 75%; padding: 12px 16px; border-radius: 20px; font-size: 14px; position: relative; line-height: 1.5; cursor: pointer; transition: 0.2s; }
+.msg { max-width: 75%; padding: 12px 16px; border-radius: 20px; font-size: 14px; position: relative; line-height: 1.5; cursor: pointer; }
 
+/* يمين (أنا) */
 .msg.sent { 
   align-self: flex-end; 
   background: linear-gradient(135deg, #9d4edd, #7b2cbf); 
   color: white; 
   border-bottom-right-radius: 4px;
   box-shadow: 0 4px 15px rgba(157, 78, 221, 0.3);
+  text-align: right;
 }
 
+/* شمال (الطرف التاني) */
 .msg.received { 
   align-self: flex-start; 
   background: rgba(255,255,255,0.1); 
   color: white; 
   border-bottom-left-radius: 4px;
-}
-
-.del-msg {
-  font-size: 11px;
-  background: rgba(255, 77, 109, 0.2);
-  color: #ff4d6d;
-  padding: 4px 10px;
-  border-radius: 10px;
-  margin-top: 8px;
-  display: none; /* مخفي افتراضياً */
-  text-align: center;
-  font-weight: bold;
-  border: 1px solid rgba(255, 77, 109, 0.3);
-}
-.msg.active .del-msg { display: block; animation: fadeInSite 0.3s; }
-
-#typingIndicator {
-  padding: 5px 20px;
-  font-size: 12px;
-  color: var(--gold);
-  font-style: italic;
-  min-height: 20px;
+  text-align: left;
 }
 
 .chat-input-area { padding: 15px; background: #10002b; display: flex; gap: 10px; align-items: center; }
@@ -322,6 +304,7 @@ button:active { transform: scale(0.98); }
 </div>
 
 <div id="login" class="container">
+  <input type="text" id="username" placeholder="اسمك (نور أو شهد)">
   <input type="password" id="password" placeholder="كلمة السر">
   <button onclick="login()">دخول</button>
 </div>
@@ -360,9 +343,8 @@ button:active { transform: scale(0.98); }
     <div class="icon-btn" onclick="toggleChat()">✖️</div>
   </div>
   <div id="chatMessages"></div>
-  <div id="typingIndicator"></div>
   <div class="chat-input-area">
-    <label for="chatFile" style="cursor:pointer; font-size: 20px;">📎</label>
+    <label for="chatFile" style="cursor:pointer; font-size: 20px; padding: 0 10px;">📎</label>
     <input type="file" id="chatFile" accept="image/*,video/*" style="display:none">
     <input type="text" id="chatMsg" placeholder="اكتبي حاجة...">
     <button onclick="sendMsg()" style="width: auto; padding: 10px 25px; margin: 0;">إرسال</button>
@@ -371,7 +353,7 @@ button:active { transform: scale(0.98); }
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, onSnapshot, query, orderBy, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBuSYBywG6Jn-pTaqkKEDcbYeORukEh1pU",
@@ -388,18 +370,18 @@ const db = getFirestore(appFirebase);
 const REAL_PASSWORD = "25102007";
 const relationshipDate = new Date(2025, 10, 29, 23, 30); 
 
-const myId = localStorage.getItem('chatUserId') || 'user_' + Math.random().toString(36).substr(2, 9);
-localStorage.setItem('chatUserId', myId);
-
 const loginDiv = document.getElementById("login");
 const appDiv = document.getElementById("app");
 const gallery = document.getElementById("gallery");
 const addBox = document.getElementById("addBox");
 let isLoggedIn = false;
 let isInitialLoad = true;
+let currentUser = ""; // لحفظ من يسجل الدخول
 
 window.login = () => {
-  if (document.getElementById("password").value === REAL_PASSWORD) {
+  const user = document.getElementById("username").value.trim();
+  if (document.getElementById("password").value === REAL_PASSWORD && user !== "") {
+    currentUser = user;
     loginDiv.classList.add("hidden");
     appDiv.classList.remove("hidden");
     isLoggedIn = true;
@@ -407,9 +389,8 @@ window.login = () => {
     startCounter();
     enableGlobalHearts();
     listenMessages();
-    setupTypingIndicator();
     document.getElementById('chatBtn').style.display = 'flex';
-  } else alert("كلمة السر غلط");
+  } else alert("تأكد من الاسم وكلمة السر");
 }
 
 function startCounter() {
@@ -466,56 +447,39 @@ window.toggleChat = () => {
   }
 }
 
-let typingTimeout;
-function setupTypingIndicator() {
-  const input = document.getElementById('chatMsg');
-  input.addEventListener('input', () => {
-    setDoc(doc(db, "typing", myId), { typing: true });
-    clearTimeout(typingTimeout);
-    typingTimeout = setTimeout(() => {
-      setDoc(doc(db, "typing", myId), { typing: false });
-    }, 2000);
-  });
-
-  onSnapshot(collection(db, "typing"), (snap) => {
-    let othersTyping = false;
-    snap.forEach(d => {
-      if (d.id !== myId && d.data().typing) othersTyping = true;
-    });
-    document.getElementById('typingIndicator').innerText = othersTyping ? "الطرف الآخر يكتب الآن..." : "";
-  });
-}
-
 window.sendMsg = async () => {
   const input = document.getElementById('chatMsg');
   const fileInput = document.getElementById('chatFile');
   const text = input.value.trim();
   const file = fileInput.files[0];
   if(!text && !file) return;
-
-  setDoc(doc(db, "typing", myId), { typing: false });
-
-  const msgData = { text, time: Date.now(), sender: myId };
-
+  
   if(file) {
     const reader = new FileReader();
     reader.onload = async () => {
-      msgData.file = reader.result;
-      msgData.type = file.type.split('/')[0];
-      await addDoc(collection(db, "chat"), msgData);
+      await addDoc(collection(db, "chat"), { 
+        text, 
+        file: reader.result, 
+        type: file.type.split('/')[0], 
+        time: Date.now(), 
+        sender: currentUser 
+      });
     };
     reader.readAsDataURL(file);
   } else {
-    await addDoc(collection(db, "chat"), msgData);
+    await addDoc(collection(db, "chat"), { 
+      text, 
+      time: Date.now(), 
+      sender: currentUser 
+    });
   }
   input.value = ""; fileInput.value = "";
 }
 
-window.deleteChatMsg = async (msgId) => {
-    event.stopPropagation(); // لمنع إغلاق القائمة فوراً
-    if(confirm("عايزة تمسحي الرسالة دي؟")) {
-        await deleteDoc(doc(db, "chat", msgId));
-    }
+window.deleteMsg = async (id) => {
+  if (prompt("اكتب كلمة السر للحذف") === REAL_PASSWORD) {
+    await deleteDoc(doc(db, "chat", id));
+  }
 }
 
 function listenMessages() {
@@ -527,34 +491,23 @@ function listenMessages() {
     snap.forEach(docSnap => {
       const d = docSnap.data();
       const div = document.createElement('div');
-      const isMe = d.sender === myId;
-      div.className = isMe ? "msg sent" : "msg received";
+      // إذا كان المرسل هو المستخدم الحالي تظهر يمين (sent)، غير ذلك شمال (received)
+      div.className = d.sender === currentUser ? "msg sent" : "msg received";
+      div.onclick = () => deleteMsg(docSnap.id);
       
-      // تبديل ظهور زر الحذف عند الضغط
-      div.onclick = function() {
-          this.classList.toggle('active');
-      };
-
       let content = `<div>${d.text || ""}</div>`;
       if(d.file) {
         if(d.type === 'image') content += `<img src="${d.file}" style="width:100%; border-radius:10px; margin-top:5px;" onclick="window.openImg('${d.file}')">`;
         else if(d.type === 'video') content += `<video src="${d.file}" controls style="width:100%; border-radius:10px;"></video>`;
       }
-      
-      content += `<span class="del-msg" onclick="deleteChatMsg('${docSnap.id}')">🗑️ حذف للكل</span>`;
-      
       div.innerHTML = content;
       msgsDiv.appendChild(div);
     });
     msgsDiv.scrollTop = msgsDiv.scrollHeight;
-    
     if(!isInitialLoad && snap.docChanges().some(change => change.type === "added")) {
-        const lastChange = snap.docChanges().find(c => c.type === "added");
-        if(lastChange.doc.data().sender !== myId) {
-            const n = document.getElementById('notify');
-            n.style.display = 'block'; setTimeout(() => n.style.display = 'none', 3000);
-            if (document.getElementById('chatWindow').style.display !== 'flex') { dot.style.display = 'block'; }
-        }
+        const n = document.getElementById('notify');
+        n.style.display = 'block'; setTimeout(() => n.style.display = 'none', 3000);
+        if (document.getElementById('chatWindow').style.display !== 'flex') { dot.style.display = 'block'; }
     }
     isInitialLoad = false;
   });
@@ -604,18 +557,13 @@ async function loadPhotos() {
     card.className = 'card';
     card.id = `card-${p.id}`;
     card.style.animationDelay = `${index * 0.1}s`;
-    
-    // حل مشكلة المسافات باستخدام encodeURIComponent لحماية النص داخل الدالة
-    const safeDesc = encodeURIComponent(p.desc || "");
-    const safeDate = encodeURIComponent(p.date || "");
-
     card.innerHTML = `<img src="${p.img}" onclick="window.openImg('${p.img}')" loading="lazy">
       <div class="card-content">
         <div style="margin-top:8px; font-size:13px; opacity:0.8;">📅 ${p.date || "بدون تاريخ"}</div>
         <div style="font-weight:bold; margin:5px 0;">${p.desc || ""}</div>
       </div>
       <div class="actions">
-        <div class="action-btn" onclick="startEdit('${p.id}', '${safeDesc}', '${safeDate}')">✏️</div>
+        <div class="action-btn" onclick="startEdit('${p.id}', '${p.desc}', '${p.date}')">✏️</div>
         <div class="action-btn" onclick="deletePhoto('${p.id}')">🗑</div>
       </div>`;
     gallery.appendChild(card);
@@ -640,13 +588,8 @@ window.deletePhoto = async id => {
   await deleteDoc(doc(db, "images", id)); loadPhotos();
 }
 
-window.startEdit = (id, encDesc, encDate) => {
+window.startEdit = (id, oldDesc, oldDate) => {
   if (prompt("كلمة السر للتعديل") !== REAL_PASSWORD) return alert("كلمة السر غلط");
-  
-  // فك التشفير لاسترجاع النص الأصلي بمسافاته
-  const oldDesc = decodeURIComponent(encDesc);
-  const oldDate = decodeURIComponent(encDate);
-
   const card = document.getElementById(`card-${id}`);
   card.querySelector('.card-content').innerHTML = `
     <input type="text" id="edit-desc-${id}" value="${oldDesc}" placeholder="الوصف">
