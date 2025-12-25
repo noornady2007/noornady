@@ -9,13 +9,13 @@
 
 <style>
 :root{
-  --bg1:#3c096c;
-  --bg2:#5a189a;
-  --bg3:#240046;
-  --glass:rgba(255,255,255,.16);
+  --bg1:#240046;
+  --bg2:#3c096c;
+  --bg3:#10002b;
+  --glass:rgba(0, 0, 0, 0.3);
   --text:#fff;
-  --btn:#e0aaff;
-  --btnText:#240046;
+  --btn:#9d4edd;
+  --btnText:#fff;
   --gold: #d4af37;
 }
 
@@ -25,19 +25,25 @@ body{
   color:var(--text);
   min-height:100vh;
   background:
-    radial-gradient(circle at top left,#7b2cbf55,transparent 45%),
-    radial-gradient(circle at bottom right,#ffafcc33,transparent 45%),
+    radial-gradient(circle at top left,#5a189a44,transparent 50%),
+    radial-gradient(circle at bottom right,#3c096c44,transparent 50%),
     linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
   transition:background 1s ease;
   overflow-x: hidden;
   position: relative;
+  opacity: 0;
+  animation: fadeInSite 1.5s ease forwards;
+}
+
+@keyframes fadeInSite {
+  to { opacity: 1; }
 }
 
 body.light{
-  --bg1:#ffe5ff;
+  --bg1:#f2e9fb;
   --bg2:#e0aaff;
   --bg3:#c77dff;
-  --text:#3c096c;
+  --text:#240046;
 }
 
 /* ===== Header ===== */
@@ -53,33 +59,50 @@ body.light{
 .icon-btn{
   width:42px;height:42px;
   border-radius:14px;
-  background:rgba(255,255,255,.25);
+  background:rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
   display:flex;
   align-items:center;
   justify-content:center;
   cursor:pointer;
+  font-size: 18px;
+  position: relative;
+  border: 1px solid rgba(255,255,255,0.1);
 }
 
-.header-title{
-  font-weight:700;
-  font-size:20px;
+.notification-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 10px;
+  height: 10px;
+  background-color: #ff4d6d;
+  border: 2px solid var(--bg1);
+  border-radius: 50%;
+  display: none;
+  animation: pulse 1.5s infinite;
 }
+
+@keyframes pulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 77, 109, 0.7); }
+  70% { transform: scale(1.2); box-shadow: 0 0 0 10px rgba(255, 77, 109, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 77, 109, 0); }
+}
+
+#chatBtn { display: none; }
+.header-title{ font-weight:700; font-size:20px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
 
 /* ===== Counter Styling ===== */
-.counter-wrapper {
-  position: relative;
-  padding: 20px 0;
-}
-
+.counter-wrapper { position: relative; padding: 20px 0; }
 .counter-container {
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(15px);
   margin: 0 16px;
   padding: 20px;
   border-radius: 25px;
   text-align: center;
-  border: 2px solid rgba(212, 175, 55, 0.6);
-  box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   position: relative;
   z-index: 2;
 }
@@ -97,145 +120,170 @@ body.light{
   50% { transform: scale(1.3); opacity: 0.8; }
 }
 
-.counter-title {
-  font-size: 16px;
-  margin-bottom: 15px;
-  font-weight: bold;
-  color: #fff;
-}
-
-.counter-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 5px;
-}
-
+.counter-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
 .counter-item {
-  display: flex;
-  flex-direction: column;
-  background: rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.03);
   padding: 8px 2px;
   border-radius: 12px;
 }
 
-.counter-val {
-  font-size: 18px;
-  font-weight: 900;
-  color: var(--gold);
-}
-
-.counter-label {
-  font-size: 10px;
-  font-weight: 700;
-  color: #ddd;
-}
+.counter-val { font-size: 18px; font-weight: 900; color: var(--gold); }
+.counter-label { font-size: 10px; color: #bbb; }
 
 /* ===== Containers ===== */
-.container{
-  max-width:430px;
-  margin:auto;
-  padding:16px;
-  position: relative;
-  z-index: 5;
-}
-
+.container{ max-width:430px; margin:auto; padding:16px; position: relative; z-index: 5; }
 .hidden{display:none}
 
 input,textarea,button{
-  width:100%;
-  padding:14px;
-  margin:8px 0;
-  border-radius:14px;
-  border:none;
-  font-family:inherit;
-  box-sizing: border-box;
+  width:100%; padding:14px; margin:8px 0; border-radius:14px; border:none;
+  font-family:inherit; box-sizing: border-box;
 }
 
-input,textarea{
-  background:rgba(255,255,255,.25);
-  color:#fff;
-}
+input,textarea{ background:rgba(255,255,255,0.08); color:#fff; border: 1px solid rgba(255,255,255,0.1); }
+button{ background:var(--btn); color:var(--btnText); font-weight:700; cursor: pointer; transition: 0.3s; }
+button:active { transform: scale(0.98); }
 
-button{
-  background:var(--btn);
-  color:var(--btnText);
-  font-weight:700;
-  cursor: pointer;
+/* ===== Progress Bar & Upload Success ===== */
+#uploadProgressContainer {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  height: 8px;
+  margin: 10px 0;
+  display: none;
+  overflow: hidden;
+}
+#uploadProgressBar {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), #ff4d6d);
+  transition: width 0.3s ease;
+}
+.success-msg {
+  color: #00ffcc;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 5px;
+  display: none;
+  font-weight: bold;
 }
 
 /* ===== Add Box ===== */
-#addBox{
-  overflow:hidden;
-  transition:.6s ease;
-}
-#addBox.hide{max-height:0;opacity:0;transform:translateY(-20px)}
-#addBox.show{max-height:500px;opacity:1;transform:translateY(0)}
+#addBox{ overflow:hidden; transition:.6s cubic-bezier(0.4, 0, 0.2, 1); }
+#addBox.hide{max-height:0; opacity:0; transform:translateY(-10px)}
+#addBox.show{max-height:600px; opacity:1; transform:translateY(0)}
 
-/* ===== Cards ===== */
+/* ===== Cards & Photos ===== */
 .card{
   background:var(--glass);
-  backdrop-filter:blur(18px);
+  backdrop-filter:blur(20px);
   border-radius:20px;
   padding:12px;
   margin-top:18px;
-  animation:fadeIn .8s ease;
+  border: 1px solid rgba(255,255,255,0.05);
+  animation: revealScroll 1s ease forwards;
+  opacity: 0;
+  transform: translateY(20px);
 }
 
-@keyframes fadeIn{
-  from{opacity:0;transform:scale(.95)}
-  to{opacity:1;transform:scale(1)}
-}
+@keyframes revealScroll { to { opacity: 1; transform: translateY(0); } }
 
-.card img{
-  width:100%;
-  border-radius:14px;
-  cursor:pointer;
-  transition:.4s ease;
-}
+.card img{ width:100%; border-radius:14px; cursor:pointer; transition:.4s ease; }
 
-/* القلوب الطائرة */
+.actions { display: flex; gap: 10px; margin-top: 10px; justify-content: flex-end; }
+.action-btn { cursor: pointer; opacity: 0.7; transition: 0.3s; padding: 5px; }
+.action-btn:hover { opacity: 1; transform: scale(1.1); }
+
+/* تأثير القلوب والكلمات العائمة الهادئة */
 .heart-pop{
-  position:fixed;
-  color:#ff4d6d;
-  font-size:24px;
-  pointer-events:none;
-  z-index: 9999;
-  animation:popOut 1.2s ease-out forwards;
-}
-
-@keyframes popOut{
-  0%{ transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
-  100%{ transform: translate(-50%, -200px) scale(1.5) rotate(20deg); opacity: 0; }
+  position:fixed; color:#ff4d6d; font-size:20px;
+  pointer-events:none; z-index: 9999;
+  animation:popOutQuiet 2s ease-out forwards;
 }
 
 .love-text-pop{
-  position:fixed;
-  font-size:16px;
-  color:#fff;
-  font-weight:700;
-  text-shadow: 0 0 10px #ff4d6d;
-  pointer-events:none;
-  z-index: 9999;
-  animation:textFloatUp 1.5s ease-out forwards;
-  white-space: nowrap;
+  position:fixed; font-size:14px; color:rgba(255,255,255,0.8);
+  font-weight:400; pointer-events:none; z-index: 9999;
+  animation:textFloatQuiet 2s ease-out forwards;
+  white-space: nowrap; text-shadow: 0 0 5px rgba(255, 77, 109, 0.3);
 }
 
-@keyframes textFloatUp {
-  0% { transform: translate(-50%, -50%); opacity: 1; }
-  100% { transform: translate(-50%, -120px); opacity: 0; }
+@keyframes popOutQuiet {
+  0%{ transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+  20%{ opacity: 1; }
+  100%{ transform: translate(-50%, -100px) scale(1.2); opacity: 0; }
 }
 
-.actions{ display:flex; gap:8px; margin-top:8px; }
-.action-btn{ width:36px; height:36px; border-radius:12px; background:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; }
-.viewer{ position:fixed; inset:0; background:#000c; display:flex; align-items:center; justify-content:center; z-index:10000; }
-.viewer img{ max-width:90%; max-height:90%; border-radius:20px; }
+@keyframes textFloatQuiet {
+  0% { transform: translate(-50%, -50%); opacity: 0; }
+  20%{ opacity: 1; }
+  100% { transform: translate(-50%, -80px); opacity: 0; }
+}
+
+/* عارض الصور المهدأ */
+.viewer{ 
+  position:fixed; inset:0; background:rgba(0,0,0,0.92); 
+  display:flex; align-items:center; justify-content:center; 
+  z-index:10000; transition: opacity 0.6s ease;
+  backdrop-filter: blur(10px);
+}
+.viewer img{ 
+  max-width:90%; max-height:90%; border-radius:10px; 
+  animation: zoomInQuiet 0.7s cubic-bezier(0.22, 1, 0.36, 1); 
+}
+
+@keyframes zoomInQuiet { 
+  from { transform: scale(0.9); opacity: 0; } 
+  to { transform: scale(1); opacity: 1; } 
+}
+
+.viewer.closing { opacity: 0; }
+.viewer.closing img { transform: scale(0.9); transition: 0.6s; }
+
+/* ===== Chat System ===== */
+#chatWindow {
+  position: fixed; bottom: 20px; left: 20px; right: 20px; top: 80px;
+  background: rgba(16, 0, 43, 0.95);
+  backdrop-filter: blur(25px);
+  z-index: 2000; border-radius: 20px; display: none; flex-direction: column;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+}
+
+.chat-open { animation: slideInChat 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+@keyframes slideInChat { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+#chatMessages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+.msg { max-width: 80%; padding: 10px; border-radius: 15px; font-size: 14px; animation: revealScroll 0.5s ease forwards; }
+.msg.sent { align-self: flex-end; background: var(--bg2); color: white; border-bottom-right-radius: 2px; }
+.msg.received { align-self: flex-start; background: rgba(255,255,255,0.1); color: white; border-bottom-left-radius: 2px; }
+
+.chat-input-area { padding: 10px; background: rgba(0,0,0,0.3); display: flex; gap: 5px; align-items: center; }
+.chat-input-area input[type="text"] { margin: 0; flex: 1; }
+
+#notify {
+  position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+  background: var(--gold); color: #000; padding: 10px 20px;
+  border-radius: 50px; font-weight: bold; z-index: 10001;
+  display: none; animation: notifyAnim 0.5s ease;
+}
+@keyframes notifyAnim { 0% { top: -50px; } 100% { top: 20px; } }
+
 </style>
 </head>
 
 <body>
 
+<div id="notify">رسالة جديدة يا روحي! ❤️</div>
+
 <div class="header">
-  <div class="icon-btn" onclick="toggleTheme()">🌙</div>
+  <div style="display: flex; gap: 10px;">
+    <div class="icon-btn" onclick="toggleTheme()">🌙</div>
+    <div class="icon-btn" id="chatBtn" onclick="toggleChat()">
+      💬
+      <span id="chatDot" class="notification-dot"></span>
+    </div>
+  </div>
   <div class="header-title">SHAHD♡NOOR 💜</div>
   <div class="icon-btn" onclick="toggleAdd()">⋮</div>
 </div>
@@ -246,12 +294,9 @@ button{
 </div>
 
 <div id="app" class="container hidden">
-  
   <div class="counter-wrapper">
     <div class="bg-heart" style="top:0; left:10px;">❤️</div>
     <div class="bg-heart" style="bottom:0; right:10px;">💖</div>
-    <div class="bg-heart" style="top:10px; right:15px;">💕</div>
-    <div class="bg-heart" style="bottom:5px; left:20px;">💗</div>
     
     <div class="counter-container">
       <div class="counter-title" id="counterTitle">بقالنا مع بعض يا روحي ❤️</div>
@@ -269,15 +314,34 @@ button{
     <input type="file" id="image" accept="image/*">
     <input type="date" id="date">
     <textarea id="desc" placeholder="وصف الصورة"></textarea>
-    <button onclick="addPhoto()">إضافة صورة</button>
+    
+    <div id="uploadProgressContainer">
+      <div id="uploadProgressBar"></div>
+    </div>
+    <div id="uploadStatus" class="success-msg">تمت إضافة الذكرى 🥰💕</div>
+    
+    <button id="addPhotoBtn" onclick="addPhoto()">إضافة صورة</button>
   </div>
-
   <div id="gallery"></div>
+</div>
+
+<div id="chatWindow">
+  <div style="padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between;">
+    <span>شات القلوب 💕</span>
+    <span onclick="toggleChat()" style="cursor:pointer">✖️</span>
+  </div>
+  <div id="chatMessages"></div>
+  <div class="chat-input-area">
+    <label for="chatFile">📎</label>
+    <input type="file" id="chatFile" accept="image/*,video/*" style="display:none">
+    <input type="text" id="chatMsg" placeholder="اكتبي حاجة...">
+    <button onclick="sendMsg()" style="width: auto; padding: 10px 20px;">إرسال</button>
+  </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, onSnapshot, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBuSYBywG6Jn-pTaqkKEDcbYeORukEh1pU",
@@ -292,7 +356,6 @@ const appFirebase = initializeApp(firebaseConfig);
 const db = getFirestore(appFirebase);
 
 const REAL_PASSWORD = "25102007";
-// تاريخ الارتباط: 29/11/2025 الساعة 11:30 مساءً (23:30)
 const relationshipDate = new Date(2025, 10, 29, 23, 30); 
 
 const loginDiv = document.getElementById("login");
@@ -300,6 +363,7 @@ const appDiv = document.getElementById("app");
 const gallery = document.getElementById("gallery");
 const addBox = document.getElementById("addBox");
 let isLoggedIn = false;
+let isInitialLoad = true;
 
 window.login = () => {
   if (document.getElementById("password").value === REAL_PASSWORD) {
@@ -309,6 +373,8 @@ window.login = () => {
     loadPhotos();
     startCounter();
     enableGlobalHearts();
+    listenMessages();
+    document.getElementById('chatBtn').style.display = 'flex';
   } else alert("كلمة السر غلط");
 }
 
@@ -318,7 +384,6 @@ function startCounter() {
     let diff = now - relationshipDate;
     let isFuture = diff < 0;
     let absDiff = Math.abs(diff);
-
     let totalSeconds = Math.floor(absDiff / 1000);
     let seconds = totalSeconds % 60;
     let totalMinutes = Math.floor(totalSeconds / 60);
@@ -326,149 +391,214 @@ function startCounter() {
     let totalHours = Math.floor(totalMinutes / 60);
     let hours = totalHours % 24;
     let totalDays = Math.floor(totalHours / 24);
-    
     let months = Math.floor(totalDays / 30.44);
     let days = Math.floor(totalDays % 30.44);
-
     document.getElementById("months").innerText = months;
     document.getElementById("days").innerText = days;
     document.getElementById("hours").innerText = hours;
     document.getElementById("minutes").innerText = minutes;
     document.getElementById("seconds").innerText = seconds;
-    
-    const title = document.getElementById('counterTitle');
-    title.innerText = isFuture ? "باقي على ارتباطنا يا روحي ❤️" : "بقالنا مع بعض يا روحي ❤️";
+    document.getElementById('counterTitle').innerText = isFuture ? "باقي على ارتباطنا يا روحي ❤️" : "بقالنا مع بعض يا روحي ❤️";
   }, 1000);
 }
 
 function enableGlobalHearts() {
   document.addEventListener('click', (e) => {
-    if (!isLoggedIn) return;
-    
+    if (!isLoggedIn || e.target.closest('#chatWindow') || e.target.closest('.icon-btn') || e.target.closest('.viewer') || e.target.closest('button') || e.target.closest('input') || e.target.closest('textarea')) return;
     const heart = document.createElement('div');
     heart.className = 'heart-pop';
     heart.innerHTML = '❤️';
-    heart.style.left = e.clientX + 'px';
+    heart.style.left = e.clientX + 'px'; 
     heart.style.top = e.clientY + 'px';
     document.body.appendChild(heart);
-    
     const text = document.createElement('div');
     text.className = 'love-text-pop';
     text.innerHTML = 'بحبك يا شهودتي 💕🌚';
-    text.style.left = e.clientX + 'px';
-    text.style.top = (e.clientY - 25) + 'px';
+    text.style.left = e.clientX + 'px'; 
+    text.style.top = (e.clientY - 20) + 'px';
     document.body.appendChild(text);
-    
-    setTimeout(() => {
-      heart.remove();
-      text.remove();
-    }, 1500);
+    setTimeout(() => { heart.remove(); text.remove(); }, 2000);
   });
 }
 
-window.toggleAdd = () => {
-  addBox.classList.toggle("show");
-  addBox.classList.toggle("hide");
+window.toggleChat = () => {
+  const win = document.getElementById('chatWindow');
+  const dot = document.getElementById('chatDot');
+  if (win.style.display === 'flex') {
+    win.style.display = 'none';
+  } else {
+    win.style.display = 'flex';
+    win.classList.add('chat-open');
+    dot.style.display = 'none';
+  }
 }
 
+window.sendMsg = async () => {
+  const input = document.getElementById('chatMsg');
+  const fileInput = document.getElementById('chatFile');
+  const text = input.value.trim();
+  const file = fileInput.files[0];
+  if(!text && !file) return;
+  if(file) {
+    const reader = new FileReader();
+    reader.onload = async () => {
+      await addDoc(collection(db, "chat"), { text, file: reader.result, type: file.type.split('/')[0], time: Date.now() });
+    };
+    reader.readAsDataURL(file);
+  } else {
+    await addDoc(collection(db, "chat"), { text, time: Date.now() });
+  }
+  input.value = ""; fileInput.value = "";
+}
+
+function listenMessages() {
+  const q = query(collection(db, "chat"), orderBy("time", "asc"));
+  onSnapshot(q, (snap) => {
+    const msgsDiv = document.getElementById('chatMessages');
+    const win = document.getElementById('chatWindow');
+    const dot = document.getElementById('chatDot');
+    const isAtBottom = msgsDiv.scrollHeight - msgsDiv.scrollTop <= msgsDiv.clientHeight + 100;
+    msgsDiv.innerHTML = "";
+    snap.forEach(doc => {
+      const d = doc.data();
+      const div = document.createElement('div');
+      div.className = "msg received";
+      let content = `<div>${d.text || ""}</div>`;
+      if(d.file) {
+        if(d.type === 'image') content += `<img src="${d.file}" onclick="window.openImg('${d.file}')">`;
+        else if(d.type === 'video') content += `<video src="${d.file}" controls></video>`;
+      }
+      div.innerHTML = content;
+      msgsDiv.appendChild(div);
+    });
+    if(isAtBottom) msgsDiv.scrollTop = msgsDiv.scrollHeight;
+    if(!isInitialLoad && snap.docChanges().some(change => change.type === "added")) {
+        showNotify();
+        if (win.style.display !== 'flex') { dot.style.display = 'block'; }
+    }
+    isInitialLoad = false;
+  });
+}
+
+function showNotify() {
+  const n = document.getElementById('notify');
+  n.style.display = 'block';
+  setTimeout(() => n.style.display = 'none', 3000);
+}
+
+window.toggleAdd = () => { addBox.classList.toggle("show"); addBox.classList.toggle("hide"); }
 window.toggleTheme = () => {
   document.body.classList.toggle("light");
   localStorage.theme = document.body.classList.contains("light") ? "light" : "dark";
 }
-
 if (localStorage.theme === "light") document.body.classList.add("light");
 
 window.addPhoto = () => {
   const imageInput = document.getElementById("image");
   const dateInput = document.getElementById("date");
   const descInput = document.getElementById("desc");
-  
+  const btn = document.getElementById("addPhotoBtn");
+  const progressCont = document.getElementById("uploadProgressContainer");
+  const progressBar = document.getElementById("uploadProgressBar");
+  const statusMsg = document.getElementById("uploadStatus");
+
   const file = imageInput.files[0];
   if (!file) return alert("اختر صورة");
-  
+
+  btn.disabled = true;
+  progressCont.style.display = "block";
+  statusMsg.style.display = "none";
+  progressBar.style.width = "0%";
+
   const r = new FileReader();
-  r.onload = async () => {
-    try {
-      await addDoc(collection(db, "images"), {
-        img: r.result,
-        date: dateInput.value, // هذا هو التاريخ الذي سنعتمد عليه في الترتيب
-        desc: descInput.value,
-        createdAt: Date.now()
-      });
-      imageInput.value = "";
-      dateInput.value = "";
-      descInput.value = "";
-      loadPhotos();
-    } catch (e) {
-      alert("حدث خطأ أثناء الرفع");
+  
+  r.onprogress = (e) => {
+    if (e.lengthComputable) {
+      const percent = (e.loaded / e.total) * 100;
+      progressBar.style.width = percent + "%";
     }
+  };
+
+  r.onload = async () => {
+    progressBar.style.width = "100%";
+    await addDoc(collection(db, "images"), { img: r.result, date: dateInput.value, desc: descInput.value, createdAt: Date.now() });
+    
+    statusMsg.style.display = "block";
+    
+    setTimeout(() => {
+      imageInput.value = ""; dateInput.value = ""; descInput.value = "";
+      btn.disabled = false;
+      progressCont.style.display = "none";
+      statusMsg.style.display = "none";
+      toggleAdd();
+      loadPhotos();
+    }, 1500);
   };
   r.readAsDataURL(file);
 }
 
 async function loadPhotos() {
   gallery.innerHTML = "<p style='text-align:center'>جاري تحميل ذكرياتنا...</p>";
-  
   const snap = await getDocs(collection(db, "images"));
   let photos = [];
   snap.forEach(d => photos.push({ id: d.id, ...d.data() }));
-
-  // ترتيب الصور حسب حقل التاريخ (date) المكتوب من الأحدث للأقدم
-  photos.sort((a, b) => {
-    const dateA = a.date ? new Date(a.date) : new Date(0);
-    const dateB = b.date ? new Date(b.date) : new Date(0);
-    
-    // إذا تساوى التاريخ، نرتب حسب وقت الرفع (createdAt)
-    if (dateB - dateA === 0) {
-        return (b.createdAt || 0) - (a.createdAt || 0);
-    }
-    return dateB - dateA;
-  });
-
-  gallery.innerHTML = "";
-  if(photos.length === 0) gallery.innerHTML = "<p style='text-align:center'>لسه مفيش صور يا روحي</p>";
-
+  photos.sort((a, b) => (new Date(b.date || 0)) - (new Date(a.date || 0)) || (b.createdAt || 0) - (a.createdAt || 0));
+  gallery.innerHTML = photos.length ? "" : "<p style='text-align:center'>لسه مفيش صور يا روحي</p>";
   photos.forEach(p => {
     const card = document.createElement('div');
     card.className = 'card';
-    card.innerHTML = `
-      <img src="${p.img}" onclick="openImg('${p.img}')" loading="lazy">
-      <div style="margin-top:8px; font-size:13px; opacity:0.8;">📅 ${p.date || "بدون تاريخ"}</div>
-      <div style="font-weight:bold; margin:5px 0;">${p.desc || ""}</div>
-      <div class="actions">
-        <div class="action-btn" onclick="editPhoto('${p.id}')">✏️</div>
-        <div class="action-btn" onclick="deletePhoto('${p.id}')">🗑</div>
+    card.id = `card-${p.id}`;
+    card.innerHTML = `<img src="${p.img}" onclick="window.openImg('${p.img}')" loading="lazy">
+      <div class="card-content">
+        <div class="card-date" style="margin-top:8px; font-size:13px; opacity:0.8;">📅 ${p.date || "بدون تاريخ"}</div>
+        <div class="card-desc" style="font-weight:bold; margin:5px 0;">${p.desc || ""}</div>
       </div>
-    `;
+      <div class="actions">
+        <div class="action-btn" onclick="startEdit('${p.id}', '${p.desc}', '${p.date}')">✏️</div>
+        <div class="action-btn" onclick="deletePhoto('${p.id}')">🗑</div>
+      </div>`;
     gallery.appendChild(card);
   });
 }
 
 window.openImg = src => {
   const v = document.createElement("div");
-  v.className = "viewer";
+  v.className = "viewer"; 
   v.innerHTML = `<img src="${src}">`;
-  v.onclick = () => v.remove();
+  v.onclick = () => { 
+    v.classList.add("closing");
+    setTimeout(() => v.remove(), 600); 
+  };
   document.body.appendChild(v);
 }
 
 window.deletePhoto = async id => {
-  if (prompt("كلمة السر للمسح") !== REAL_PASSWORD) return;
-  await deleteDoc(doc(db, "images", id));
+  if (prompt("كلمة السر للمسح") !== REAL_PASSWORD) return alert("كلمة السر غلط");
+  await deleteDoc(doc(db, "images", id)); loadPhotos();
+}
+
+window.startEdit = (id, oldDesc, oldDate) => {
+  if (prompt("كلمة السر للتعديل") !== REAL_PASSWORD) return alert("كلمة السر غلط");
+  
+  const card = document.getElementById(`card-${id}`);
+  const contentDiv = card.querySelector('.card-content');
+  
+  // تحويل المحتوى إلى حقول إدخال داخل الكرت
+  contentDiv.innerHTML = `
+    <input type="text" id="edit-desc-${id}" value="${oldDesc}" placeholder="الوصف">
+    <input type="date" id="edit-date-${id}" value="${oldDate}">
+    <button onclick="saveEdit('${id}')" style="background:var(--gold); color:#000; margin-top:5px;">حفظ التعديل ✅</button>
+    <button onclick="loadPhotos()" style="background:rgba(255,255,255,0.1); margin-top:5px;">إلغاء</button>
+  `;
+}
+
+window.saveEdit = async (id) => {
+  const newDesc = document.getElementById(`edit-desc-${id}`).value;
+  const newDate = document.getElementById(`edit-date-${id}`).value;
+  
+  await updateDoc(doc(db, "images", id), { desc: newDesc, date: newDate });
   loadPhotos();
 }
-
-window.editPhoto = async id => {
-  if (prompt("كلمة السر للتعديل") !== REAL_PASSWORD) return;
-  const d = prompt("الوصف الجديد");
-  const dt = prompt("التاريخ (YYYY-MM-DD)");
-  if (d !== null) {
-    await updateDoc(doc(db, "images", id), { desc: d, date: dt });
-    loadPhotos();
-  }
-}
 </script>
-
 </body>
 </html>
-
